@@ -29,17 +29,29 @@ filename = 'pass_through_filtered.pcd'
 pcl.save(cloud_filtered, filename)
 
 # RANSAC plane segmentation
+seg = cloud_filtered.make_segmenter()
 
+#set the model wisht to fit
+seg.set_model_type(pcl.SACMODEL_PLANE)
+seg.set_method_type(pcl.SAC_RANSAC)
+
+max_distance = 0.01
+seg.set_distance_threshold(max_distance)
+
+inliers, coefficients = seg.segment()
 
 # Extract inliers
 
-# Save pcd for table
-# pcl.save(cloud, filename)
-
+extracted_inliners = cloud_filtered.extract(inliers, negative=False)
+filename = 'extracted_inliners.pcd'
+pcl.save(extracted_inliners, filename)
 
 # Extract outliers
+extracted_outliers = cloud_filtered.extract(inliers, negative=True)
+filename = 'extracted_outliers.pcd'
+pcl.save(extracted_outliers, filename)
 
 
-# Save pcd for tabletop objects
+
 
 
